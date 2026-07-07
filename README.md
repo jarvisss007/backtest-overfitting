@@ -46,6 +46,14 @@ print(format_report(analyze(returns)))
 A tool you can't trust is worse than none, so the test suite asserts both directions: it must
 flag cherry-picked noise **and** let a genuine edge through.
 
+## Case study: my own research
+
+[`case_studies/zero-dte-audit.md`](case_studies/zero-dte-audit.md) — I ran the toolkit against
+a 6-config strategy sweep from my own 0DTE research. With no code inspection, "pick the best
+in-sample Sharpe" selected exactly the config containing a lookahead bug, and the tools
+convicted it (DSR 0.34, PBO 0.60, IS→OOS slope −1.44 → **OVERFIT**) — reproducing in seconds
+a verdict that originally took a manual bug-hunt.
+
 ## Install & run
 
 ```
