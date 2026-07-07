@@ -1,5 +1,7 @@
 # backtest-overfitting
 
+[![tests](https://github.com/jarvisss007/backtest-overfitting/actions/workflows/ci.yml/badge.svg)](https://github.com/jarvisss007/backtest-overfitting/actions/workflows/ci.yml)
+
 Tools for detecting when a backtest is fooling you.
 
 Trying many strategy configurations and reporting the best one's Sharpe is the most common way
