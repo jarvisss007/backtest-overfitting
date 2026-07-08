@@ -61,6 +61,14 @@ vs buy-and-hold 0.53). Real-but-weak edges produce exactly this PBO≈0 / DSR<0.
 the two metrics measure different things, and you need both. Fully reproducible from public
 data: `python case_studies/daily_meanrev_repro.py`.
 
+[`case_studies/insider-gap.md`](case_studies/insider-gap.md) — the third failure mode:
+an **execution assumption**. SEC Form 4 insider purchases show t≈3 abnormal returns and a
+net Sharpe of +3.1 entering at the filing-day close — but filings mostly arrive after hours,
+and at the honest entry (next day's open) the edge vanishes entirely (all |t|<2, every
+variant net-negative → OVERFIT). The whole effect lives in the untradeable overnight gap.
+Code bug (study #1), weak edge (study #2), false execution assumption (study #3) — three
+different ways a good-looking backtest lies.
+
 ## Install & run
 
 ```
