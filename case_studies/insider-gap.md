@@ -46,6 +46,28 @@ open**. The market reprices the insider's purchase before any follower can act. 
 backtest wasn't wrong about the market — it was wrong about *you*: it silently assumed you
 could trade at a price that had already expired.
 
+## Large-sample confirmation (and one more lesson)
+
+A deeper backfill (deterministic 60-filings/day sample, Jul 2025 – Jul 2026) grew the set to
+**675 clean events / 624 mature across 378 tickers** — a full year. At strict entry the
+means look significant again… and the distribution tells you why that's a trap:
+
+```
++1d   mean +0.70%   t=3.76     median +0.01%   win 50.5%
++5d   mean +0.89%   t=2.66     median −0.01%   win 49.7%
++20d  mean +1.03%   t=1.38     median −0.70%   win 45.7%
+
+portfolio (254 days × 5 holds, 40 bps):  best net Sharpe +0.54
+toolkit:  DSR 0.41 · PBO 0.914  →  OVERFIT / no tradeable edge
+```
+
+A t-stat of 3.8 with a **median of zero and a coin-flip win rate**: the "signal" is a
+handful of extreme right-tail winners, not a repeatable tendency. The calendar-time
+portfolio confirms it — hold-period selection is wildly unstable (PBO 0.91, the in-sample
+best ranks below median out-of-sample 9 times in 10). Lesson four, free of charge:
+**on skewed event distributions, a significant mean is not a strategy — read the median,
+the win rate, and the gate.**
+
 ## What this teaches
 
 1. **Entry convention is a hypothesis, not a detail.** One line — `close[t]` vs
