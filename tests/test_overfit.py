@@ -4,7 +4,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from overfit import (probabilistic_sharpe_ratio, expected_max_sharpe,
                      deflated_sharpe_ratio, min_track_record_length,
-                     min_backtest_length, pbo_cscv, analyze)
+                     min_backtest_length, pbo_cscv, analyze, monte_carlo_drawdown)
 
 
 def test_psr_bounds_and_monotonic():
@@ -63,3 +63,32 @@ def test_analyze_flags_noise_and_passes_real_edge():
     rep_real = analyze(real)
     assert rep_real["best_strategy"] == 0             # it should be selected
     assert rep_real["dsr"] > rep_noise["dsr"]         # and be more credible than pure noise
+
+
+def test_monte_carlo_drawdown_shape():
+    rng = np.random.default_rng(1)
+    r = rng.normal(0.0005, 0.01, size=500)
+    res = monte_carlo_drawdown(r, n_sims=1000, seed=1)
+    assert res["n_trades"] == 500
+    assert 0.0 <= res["sim_p5"] <= res["sim_p25"] <= res["sim_p50"] <= res["sim_p75"] <= res["sim_p95"]
+    assert res["actual_order_max_dd"] >= 0.0
+
+
+def test_monte_carlo_drawdown_flags_unlucky_historical_ordering():
+    # same 500 trades every time; but the ACTUAL historical order dumps every loss
+    # consecutively at the start — the worst possible ordering — while a typical
+    # shuffle spreads gains and losses out and drawdown stays much milder.
+    rng = np.random.default_rng(2)
+    wins = np.full(400, 0.01)
+    losses = np.full(100, -0.03)
+    worst_order = np.concatenate([losses, wins])       # all pain up front
+    res = monte_carlo_drawdown(worst_order, n_sims=2000, seed=2)
+    assert res["actual_order_max_dd"] >= res["sim_p95"]          # this ordering is in the bad tail
+    assert res["actual_was_lucky_ordering"] is False
+
+    # the worst-case ordering's drawdown should be materially worse than the AVERAGE
+    # random shuffle of the same trades (a single random draw can itself land in
+    # either tail sometimes, so compare against the mean of several, not one draw)
+    typical_dds = [monte_carlo_drawdown(rng.permutation(worst_order), n_sims=1)["actual_order_max_dd"]
+                   for _ in range(30)]
+    assert res["actual_order_max_dd"] > np.mean(typical_dds)

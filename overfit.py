@@ -214,6 +214,46 @@ def analyze(returns, periods_per_year=252, n_splits=16):
     }
 
 
+def monte_carlo_drawdown(returns, n_sims=5000, seed=0):
+    """The specific exercise from the Fluency Project's Complete Guide to Day Trading
+    (Heitkoetter): don't trust the one historical drawdown you happened to observe —
+    shuffle the trade sequence thousands of times (same trades, different order) and
+    look at the DISTRIBUTION of max drawdown. A backtest with a mild-looking 8% max
+    drawdown can still have a 25% worst-case drawdown lurking in a different, equally
+    likely ordering of the same trades. This complements deflated_sharpe_ratio/pbo_cscv
+    (which ask "is the edge real?") by asking a different question: "if it's real, how
+    bad could living through it actually get?"
+
+    Returns dict with the actual historical max drawdown plus the simulated
+    distribution's percentiles (5/25/50/75/95), all as fractions (0.08 = 8%).
+    """
+    r = np.asarray(returns, dtype=float)
+    r = r[np.isfinite(r)]
+    if len(r) < 30:
+        return {"error": "fewer than 30 returns — not enough trades to shuffle meaningfully"}
+
+    def max_dd(seq):
+        equity = np.cumprod(1.0 + seq)
+        peak = np.maximum.accumulate(equity)
+        dd = (equity - peak) / peak
+        return float(-dd.min())
+
+    actual_dd = max_dd(r)
+    rng = np.random.default_rng(seed)
+    sims = np.empty(n_sims)
+    for i in range(n_sims):
+        sims[i] = max_dd(rng.permutation(r))
+
+    pct = lambda q: float(np.percentile(sims, q))
+    return {
+        "n_trades": len(r), "n_sims": n_sims,
+        "actual_order_max_dd": actual_dd,
+        "sim_p5": pct(5), "sim_p25": pct(25), "sim_p50": pct(50),
+        "sim_p75": pct(75), "sim_p95": pct(95),
+        "actual_was_lucky_ordering": bool(actual_dd < pct(25)),
+    }
+
+
 def _verdict(dsr, pbo):
     if np.isnan(dsr):
         return "inconclusive"

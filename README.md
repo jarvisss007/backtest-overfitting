@@ -29,6 +29,7 @@ print(format_report(analyze(returns)))
 | `min_backtest_length` | How many years of backtest do N trials require before a given Sharpe means anything? |
 | `pbo_cscv` | **Probability of Backtest Overfitting** via combinatorially symmetric cross-validation. |
 | `analyze` / `format_report` | One-call workup on a `(T × N)` matrix of strategy returns. |
+| `monte_carlo_drawdown` | If this edge is real, how bad could the ride actually get? Shuffles the same trades into thousands of orderings and reports the max-drawdown distribution — see [case study #4](case_studies/turn-of-month-drawdown.md). |
 
 ## Why it works — the demo
 
