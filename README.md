@@ -67,15 +67,25 @@ an **execution assumption**. SEC Form 4 insider purchases show t≈3 abnormal re
 net Sharpe of +3.1 entering at the filing-day close — but filings mostly arrive after hours,
 and at the honest entry (next day's open) the edge vanishes entirely (all |t|<2, every
 variant net-negative → OVERFIT). The whole effect lives in the untradeable overnight gap.
-Code bug (study #1), weak edge (study #2), false execution assumption (study #3) — three
-different ways a good-looking backtest lies.
+[`case_studies/turn-of-month-drawdown.md`](case_studies/turn-of-month-drawdown.md) — the
+case where every gate **passes**: turn-of-month t5 scores DSR **1.0**, PBO **0.01**,
+walk-forward 5/5 — the cleanest statistical profile in my knowledge base. DSR and PBO
+answer "is this edge real, and not an artifact of trying many configs?" They say nothing
+about what living through it would feel like. Reshuffling the same 3,750 daily returns
+5,000 times puts the *typical* max drawdown at 26.0% and the unlucky-but-ordinary p95 at
+37.6% — the single historical path you observed is one draw from a much wider range.
+Surviving the significance tests is not the same as being survivable.
+
+Code bug (study #1), weak edge (study #2), false execution assumption (study #3), and a
+real edge you may not be able to sit through (study #4) — four different ways a
+good-looking backtest misleads you.
 
 ## Install & run
 
 ```
 pip install -r requirements.txt      # numpy, scipy
 python demo.py                       # see it in action
-pytest -q                            # 7 property/behaviour tests
+pytest -q                            # 9 property/behaviour tests
 ```
 
 Use it on your own research by passing a `(T observations × N strategies)` matrix of period
