@@ -1,7 +1,12 @@
 # Case study 5 (design, pre-registered before any results): How many ML-discovered return predictors survive?
 
-**Status:** design only, written 2026-09-13. No data has been fitted. The grid, metrics and pass rules below are
-fixed now so that nothing can be tuned after seeing results. Changes after this point must be logged in the
+**Status:** built 2026-10-17, as a reduced null-world slice (one simulated asset, 20 candidates; DSR, PBO and MinBTL).
+The real-data world, the full 360-candidate grid, `corrections.py` and the Romano-Wolf / SPA / Benjamini-Hochberg /
+effective-trials measures are **not** built and stay open (see Amendments). Results: `results.md`, `results.json`,
+`results.png`; code: `run_search.py`; tests: `tests/test_ml_model_search.py`.
+
+The design below was written 2026-09-13 and pre-registered before any results: the grid, metrics and pass rules were
+fixed then so that nothing could be tuned after seeing results. Changes after that point are logged in the
 "Amendments" section with a date and a reason.
 
 ## Question
@@ -67,4 +72,28 @@ For each world and asset:
 Target: headline table by **25 October 2026**, in time for the ETH application (submit 31 October).
 
 ## Amendments
-_None yet._
+
+**2026-10-17 - the first build is a reduced null-world slice.** Reason: ship a working, tested slice by the
+25 October target; the full design needs a real-data loader and a separate corrections module, which are further work.
+Nothing below was chosen after seeing a result; the seed (20261017) was fixed before the first run.
+
+1. **Candidates: 20 instead of 360 per asset.** Five models (ridge, lasso, gradient boosting, random forest, one-hidden-layer
+   MLP) x four lookback windows (5, 10, 20, 60 days). Feature set fixed to lagged returns only, horizon fixed to 1 day,
+   one fixed hyperparameter setting per model (the three levels collapsed to one). Walk-forward is as designed:
+   expanding window, refit monthly (every 21 trading days), traded as sign(prediction).
+2. **World: the known-null world only, and simulated.** One asset, a seeded price series with zero conditional mean
+   (GARCH(1,1) volatility, symmetric Student-t(6) innovations), so volatility clustering is kept as in the
+   block-permuted null the design describes but nothing is predictable by construction. The real-data world is not run.
+3. **Measures: DSR (N = the nominal 20), PBO (CSCV, 16 splits) and MinBTL**, all from `overfit.py`. Not built:
+   DSR at the effective trial count, Romano-Wolf, Hansen SPA, Benjamini-Hochberg, the nominal-to-effective ratio.
+4. **Costs:** the design says "a fixed round-trip cost" without a value; 1 bp per side on every position change
+   (a long-to-short flip costs 2 bp), the same convention as the other case studies.
+5. **In-sample / out-of-sample.** The walk-forward return stream is split in time: the first 1,260 days are the
+   researcher's backtest (all selection and all of DSR / PBO / MinBTL use only these), the last 756 days are held out
+   and used only to see what the selected model does next. A shorter, lighter configuration of the same search
+   (`FAST` in `run_search.py`) is replicated over fresh seeds to show the single run is not a lucky draw; the test suite
+   uses it too.
+6. **Deliverables:** `results.md` stands in for `REPORT.md`; there is no `corrections.py`. The tests assert the properties
+   (no edge by construction, a positive in-sample winner with high probability, DSR / PBO flag it) and that the committed
+   results are internally consistent, rather than exact headline numbers, which can differ in the last digits across
+   platforms.

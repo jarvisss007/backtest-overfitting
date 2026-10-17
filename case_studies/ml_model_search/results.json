@@ -1,0 +1,672 @@
+{
+  "meta": {
+    "study": "case study 5: ML model search on the null world",
+    "seed": 20261017,
+    "world": {
+      "daily_vol": 0.01,
+      "alpha": 0.08,
+      "beta": 0.9,
+      "df": 6,
+      "mean": "zero (by construction)"
+    },
+    "models": [
+      "ridge",
+      "lasso",
+      "gbm",
+      "rf",
+      "mlp"
+    ],
+    "windows": [
+      5,
+      10,
+      20,
+      60
+    ],
+    "cost_bps_per_side": 1.0,
+    "config": {
+      "name": "full",
+      "burn_in": 504,
+      "is_days": 1260,
+      "oos_days": 756,
+      "refit_every": 21,
+      "gbm": {
+        "n_estimators": 50,
+        "learning_rate": 0.05,
+        "max_depth": 2,
+        "subsample": 0.7,
+        "max_features": 0.33
+      },
+      "rf": {
+        "n_estimators": 40,
+        "min_samples_leaf": 25,
+        "max_features": 0.33,
+        "max_samples": 0.5
+      },
+      "mlp": {
+        "hidden_layer_sizes": [
+          16
+        ],
+        "alpha": 0.01,
+        "max_iter": 100
+      }
+    },
+    "note": "IS = backtest used to pick the model; OOS = later held-out days. Sharpe ratios are annualised (252 d) and net of costs unless marked gross."
+  },
+  "surface": [
+    {
+      "model": "ridge",
+      "window": 5,
+      "is_sharpe": 0.7963,
+      "oos_sharpe": -0.3236,
+      "is_tstat": 1.7805
+    },
+    {
+      "model": "ridge",
+      "window": 10,
+      "is_sharpe": 0.6403,
+      "oos_sharpe": -0.7259,
+      "is_tstat": 1.4317
+    },
+    {
+      "model": "ridge",
+      "window": 20,
+      "is_sharpe": 0.5627,
+      "oos_sharpe": -0.5501,
+      "is_tstat": 1.2582
+    },
+    {
+      "model": "ridge",
+      "window": 60,
+      "is_sharpe": -0.0344,
+      "oos_sharpe": 0.0627,
+      "is_tstat": -0.0769
+    },
+    {
+      "model": "lasso",
+      "window": 5,
+      "is_sharpe": 0.839,
+      "oos_sharpe": -0.5414,
+      "is_tstat": 1.8761
+    },
+    {
+      "model": "lasso",
+      "window": 10,
+      "is_sharpe": 0.7314,
+      "oos_sharpe": -0.6229,
+      "is_tstat": 1.6355
+    },
+    {
+      "model": "lasso",
+      "window": 20,
+      "is_sharpe": 0.193,
+      "oos_sharpe": -0.4429,
+      "is_tstat": 0.4315
+    },
+    {
+      "model": "lasso",
+      "window": 60,
+      "is_sharpe": -0.1872,
+      "oos_sharpe": -0.3814,
+      "is_tstat": -0.4186
+    },
+    {
+      "model": "gbm",
+      "window": 5,
+      "is_sharpe": -0.4518,
+      "oos_sharpe": -1.3969,
+      "is_tstat": -1.0104
+    },
+    {
+      "model": "gbm",
+      "window": 10,
+      "is_sharpe": 0.5098,
+      "oos_sharpe": -1.0211,
+      "is_tstat": 1.1398
+    },
+    {
+      "model": "gbm",
+      "window": 20,
+      "is_sharpe": 0.1747,
+      "oos_sharpe": -0.7063,
+      "is_tstat": 0.3906
+    },
+    {
+      "model": "gbm",
+      "window": 60,
+      "is_sharpe": -0.4596,
+      "oos_sharpe": -0.7539,
+      "is_tstat": -1.0276
+    },
+    {
+      "model": "rf",
+      "window": 5,
+      "is_sharpe": 0.4729,
+      "oos_sharpe": -1.3195,
+      "is_tstat": 1.0575
+    },
+    {
+      "model": "rf",
+      "window": 10,
+      "is_sharpe": 0.6286,
+      "oos_sharpe": -1.1387,
+      "is_tstat": 1.4057
+    },
+    {
+      "model": "rf",
+      "window": 20,
+      "is_sharpe": -0.056,
+      "oos_sharpe": -0.1029,
+      "is_tstat": -0.1252
+    },
+    {
+      "model": "rf",
+      "window": 60,
+      "is_sharpe": 0.1263,
+      "oos_sharpe": -0.5833,
+      "is_tstat": 0.2823
+    },
+    {
+      "model": "mlp",
+      "window": 5,
+      "is_sharpe": 0.2302,
+      "oos_sharpe": -0.9215,
+      "is_tstat": 0.5147
+    },
+    {
+      "model": "mlp",
+      "window": 10,
+      "is_sharpe": 0.4217,
+      "oos_sharpe": -0.2573,
+      "is_tstat": 0.943
+    },
+    {
+      "model": "mlp",
+      "window": 20,
+      "is_sharpe": 0.0661,
+      "oos_sharpe": 0.2713,
+      "is_tstat": 0.1477
+    },
+    {
+      "model": "mlp",
+      "window": 60,
+      "is_sharpe": -0.2282,
+      "oos_sharpe": -0.5981,
+      "is_tstat": -0.5102
+    }
+  ],
+  "selection": {
+    "winner": "lasso|w5",
+    "winner_index": 4,
+    "winner_is_sharpe": 0.839,
+    "winner_oos_sharpe": -0.5414,
+    "winner_oos_sharpe_gross": -0.3218,
+    "winner_is_tstat": 1.8761,
+    "winner_oos_rank_of_20": 8,
+    "n_candidates": 20,
+    "n_positive_is": 14,
+    "n_is_tstat_gt2": 0,
+    "n_positive_oos": 2,
+    "mean_is_sharpe_all": 0.2488,
+    "mean_oos_sharpe_all": -0.6027,
+    "mean_oos_sharpe_all_gross": -0.3843,
+    "spearman_is_vs_oos": -0.0737
+  },
+  "toolkit": {
+    "n_trials": 20,
+    "backtest_years": 5.0,
+    "best_sharpe_annual": 0.839,
+    "psr_vs_zero": 0.9704,
+    "dsr": 0.5674,
+    "deflated_benchmark_sharpe_annual": 0.7635,
+    "pbo": 0.5462,
+    "prob_oos_loss": 0.3968,
+    "degradation": -0.6328,
+    "min_backtest_length_years": 5.1322,
+    "n_cscv_splits": 16,
+    "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+  },
+  "replication": {
+    "note": "Same 20-candidate null-world search on the FAST configuration (shorter series, lighter models, quarterly refits), fresh seeds.",
+    "config": {
+      "name": "fast",
+      "burn_in": 252,
+      "is_days": 756,
+      "oos_days": 504,
+      "refit_every": 63,
+      "gbm": {
+        "n_estimators": 20,
+        "learning_rate": 0.05,
+        "max_depth": 2,
+        "subsample": 0.7,
+        "max_features": 0.33
+      },
+      "rf": {
+        "n_estimators": 20,
+        "min_samples_leaf": 25,
+        "max_features": 0.33,
+        "max_samples": 0.5,
+        "max_depth": 6
+      },
+      "mlp": {
+        "hidden_layer_sizes": [
+          8
+        ],
+        "alpha": 0.01,
+        "max_iter": 40
+      }
+    },
+    "summary": {
+      "config": "fast",
+      "n_seeds": 30,
+      "share_positive_is_winner": 1.0,
+      "mean_winner_is_sharpe": 0.7357,
+      "mean_winner_oos_sharpe": -0.1445,
+      "se_winner_oos_sharpe": 0.1406,
+      "mean_winner_oos_sharpe_gross": 0.0001,
+      "se_winner_oos_sharpe_gross": 0.1388,
+      "mean_all_candidates_oos_sharpe_gross": -0.1072,
+      "se_all_candidates_oos_sharpe_gross": 0.0723,
+      "share_winner_oos_positive": 0.3333,
+      "share_nominal_winner_t_gt_2": 0.2,
+      "share_dsr_below_095": 1.0,
+      "median_dsr": 0.3337,
+      "mean_pbo": 0.5364,
+      "share_pbo_at_least_half": 0.6,
+      "share_flagged_by_verdict": 1.0,
+      "share_overfit_verdict": 0.6,
+      "nominal_winners_rejected_by_dsr": 1.0
+    },
+    "records": [
+      {
+        "seed": 20261018,
+        "winner": "mlp|w10",
+        "winner_is_sharpe": 1.2481,
+        "winner_oos_sharpe": -0.1973,
+        "winner_oos_sharpe_gross": -0.0735,
+        "winner_is_tstat": 2.1617,
+        "mean_oos_sharpe_all": 0.3941,
+        "mean_oos_sharpe_all_gross": 0.4962,
+        "dsr": 0.6436,
+        "pbo": 0.2964,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261019,
+        "winner": "rf|w5",
+        "winner_is_sharpe": 0.8477,
+        "winner_oos_sharpe": -0.2076,
+        "winner_oos_sharpe_gross": -0.0145,
+        "winner_is_tstat": 1.4683,
+        "mean_oos_sharpe_all": -0.4489,
+        "mean_oos_sharpe_all_gross": -0.2906,
+        "dsr": 0.5231,
+        "pbo": 0.5329,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261020,
+        "winner": "mlp|w20",
+        "winner_is_sharpe": 0.5926,
+        "winner_oos_sharpe": -0.063,
+        "winner_oos_sharpe_gross": 0.0695,
+        "winner_is_tstat": 1.0265,
+        "mean_oos_sharpe_all": -0.0546,
+        "mean_oos_sharpe_all_gross": 0.0893,
+        "dsr": 0.3909,
+        "pbo": 0.6121,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261021,
+        "winner": "rf|w20",
+        "winner_is_sharpe": 1.1596,
+        "winner_oos_sharpe": -0.58,
+        "winner_oos_sharpe_gross": -0.4137,
+        "winner_is_tstat": 2.0085,
+        "mean_oos_sharpe_all": -0.738,
+        "mean_oos_sharpe_all_gross": -0.6044,
+        "dsr": 0.6332,
+        "pbo": 0.4657,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261022,
+        "winner": "mlp|w10",
+        "winner_is_sharpe": 1.1627,
+        "winner_oos_sharpe": -0.7886,
+        "winner_oos_sharpe_gross": -0.6158,
+        "winner_is_tstat": 2.0139,
+        "mean_oos_sharpe_all": -0.8054,
+        "mean_oos_sharpe_all_gross": -0.652,
+        "dsr": 0.7013,
+        "pbo": 0.3056,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261023,
+        "winner": "lasso|w60",
+        "winner_is_sharpe": 0.3732,
+        "winner_oos_sharpe": 0.5096,
+        "winner_oos_sharpe_gross": 0.6831,
+        "winner_is_tstat": 0.6463,
+        "mean_oos_sharpe_all": -0.3713,
+        "mean_oos_sharpe_all_gross": -0.2444,
+        "dsr": 0.3099,
+        "pbo": 0.7111,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261024,
+        "winner": "rf|w60",
+        "winner_is_sharpe": 0.8214,
+        "winner_oos_sharpe": 1.0451,
+        "winner_oos_sharpe_gross": 1.1637,
+        "winner_is_tstat": 1.4227,
+        "mean_oos_sharpe_all": 0.2399,
+        "mean_oos_sharpe_all_gross": 0.329,
+        "dsr": 0.3137,
+        "pbo": 0.5477,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261025,
+        "winner": "gbm|w60",
+        "winner_is_sharpe": 0.6948,
+        "winner_oos_sharpe": -0.4644,
+        "winner_oos_sharpe_gross": -0.333,
+        "winner_is_tstat": 1.2034,
+        "mean_oos_sharpe_all": -0.9742,
+        "mean_oos_sharpe_all_gross": -0.813,
+        "dsr": 0.4152,
+        "pbo": 0.4942,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261026,
+        "winner": "rf|w20",
+        "winner_is_sharpe": 0.6472,
+        "winner_oos_sharpe": 0.4659,
+        "winner_oos_sharpe_gross": 0.5941,
+        "winner_is_tstat": 1.1209,
+        "mean_oos_sharpe_all": 0.4795,
+        "mean_oos_sharpe_all_gross": 0.5892,
+        "dsr": 0.3988,
+        "pbo": 0.5988,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261027,
+        "winner": "mlp|w60",
+        "winner_is_sharpe": 0.3752,
+        "winner_oos_sharpe": -0.414,
+        "winner_oos_sharpe_gross": -0.2603,
+        "winner_is_tstat": 0.6498,
+        "mean_oos_sharpe_all": 0.0146,
+        "mean_oos_sharpe_all_gross": 0.1717,
+        "dsr": 0.1834,
+        "pbo": 0.5557,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261028,
+        "winner": "mlp|w10",
+        "winner_is_sharpe": 0.3864,
+        "winner_oos_sharpe": -0.4843,
+        "winner_oos_sharpe_gross": -0.3765,
+        "winner_is_tstat": 0.6693,
+        "mean_oos_sharpe_all": -0.0764,
+        "mean_oos_sharpe_all_gross": 0.0515,
+        "dsr": 0.1361,
+        "pbo": 0.4436,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261029,
+        "winner": "mlp|w5",
+        "winner_is_sharpe": 0.8366,
+        "winner_oos_sharpe": -0.3875,
+        "winner_oos_sharpe_gross": -0.2092,
+        "winner_is_tstat": 1.4491,
+        "mean_oos_sharpe_all": -0.136,
+        "mean_oos_sharpe_all_gross": 0.0746,
+        "dsr": 0.428,
+        "pbo": 0.3295,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261030,
+        "winner": "mlp|w20",
+        "winner_is_sharpe": 0.8183,
+        "winner_oos_sharpe": -0.122,
+        "winner_oos_sharpe_gross": 0.0296,
+        "winner_is_tstat": 1.4173,
+        "mean_oos_sharpe_all": -0.1334,
+        "mean_oos_sharpe_all_gross": -0.0044,
+        "dsr": 0.3696,
+        "pbo": 0.4452,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261031,
+        "winner": "mlp|w10",
+        "winner_is_sharpe": 0.336,
+        "winner_oos_sharpe": -0.673,
+        "winner_oos_sharpe_gross": -0.4902,
+        "winner_is_tstat": 0.5821,
+        "mean_oos_sharpe_all": -0.5352,
+        "mean_oos_sharpe_all_gross": -0.3703,
+        "dsr": 0.2237,
+        "pbo": 0.6514,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261032,
+        "winner": "rf|w5",
+        "winner_is_sharpe": 0.5541,
+        "winner_oos_sharpe": -0.6168,
+        "winner_oos_sharpe_gross": -0.4387,
+        "winner_is_tstat": 0.9598,
+        "mean_oos_sharpe_all": -0.6208,
+        "mean_oos_sharpe_all_gross": -0.473,
+        "dsr": 0.1928,
+        "pbo": 0.7279,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261033,
+        "winner": "gbm|w5",
+        "winner_is_sharpe": 0.5783,
+        "winner_oos_sharpe": 1.1481,
+        "winner_oos_sharpe_gross": 1.1673,
+        "winner_is_tstat": 1.0016,
+        "mean_oos_sharpe_all": 0.1282,
+        "mean_oos_sharpe_all_gross": 0.2198,
+        "dsr": 0.1709,
+        "pbo": 0.9746,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261034,
+        "winner": "rf|w5",
+        "winner_is_sharpe": 0.5775,
+        "winner_oos_sharpe": -0.8161,
+        "winner_oos_sharpe_gross": -0.6366,
+        "winner_is_tstat": 1.0002,
+        "mean_oos_sharpe_all": -0.2657,
+        "mean_oos_sharpe_all_gross": -0.1193,
+        "dsr": 0.3067,
+        "pbo": 0.3677,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261035,
+        "winner": "mlp|w10",
+        "winner_is_sharpe": 0.3539,
+        "winner_oos_sharpe": 0.0611,
+        "winner_oos_sharpe_gross": 0.195,
+        "winner_is_tstat": 0.613,
+        "mean_oos_sharpe_all": -0.8699,
+        "mean_oos_sharpe_all_gross": -0.7314,
+        "dsr": 0.169,
+        "pbo": 0.3462,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261036,
+        "winner": "lasso|w20",
+        "winner_is_sharpe": 0.9298,
+        "winner_oos_sharpe": -0.3644,
+        "winner_oos_sharpe_gross": -0.2906,
+        "winner_is_tstat": 1.6104,
+        "mean_oos_sharpe_all": -0.4691,
+        "mean_oos_sharpe_all_gross": -0.397,
+        "dsr": 0.54,
+        "pbo": 0.8241,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261037,
+        "winner": "lasso|w60",
+        "winner_is_sharpe": 0.4312,
+        "winner_oos_sharpe": 0.1311,
+        "winner_oos_sharpe_gross": 0.2544,
+        "winner_is_tstat": 0.7468,
+        "mean_oos_sharpe_all": 0.1588,
+        "mean_oos_sharpe_all_gross": 0.2634,
+        "dsr": 0.1986,
+        "pbo": 0.6636,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261038,
+        "winner": "mlp|w5",
+        "winner_is_sharpe": 1.3076,
+        "winner_oos_sharpe": 1.9249,
+        "winner_oos_sharpe_gross": 2.0371,
+        "winner_is_tstat": 2.2648,
+        "mean_oos_sharpe_all": 0.3796,
+        "mean_oos_sharpe_all_gross": 0.5106,
+        "dsr": 0.4934,
+        "pbo": 0.2077,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261039,
+        "winner": "lasso|w10",
+        "winner_is_sharpe": 0.6388,
+        "winner_oos_sharpe": 0.2783,
+        "winner_oos_sharpe_gross": 0.4441,
+        "winner_is_tstat": 1.1064,
+        "mean_oos_sharpe_all": -0.1076,
+        "mean_oos_sharpe_all_gross": 0.0412,
+        "dsr": 0.3538,
+        "pbo": 0.7207,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261040,
+        "winner": "ridge|w10",
+        "winner_is_sharpe": 2.0929,
+        "winner_oos_sharpe": 0.397,
+        "winner_oos_sharpe_gross": 0.593,
+        "winner_is_tstat": 3.6249,
+        "mean_oos_sharpe_all": -0.3718,
+        "mean_oos_sharpe_all_gross": -0.1904,
+        "dsr": 0.8996,
+        "pbo": 0.1085,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      },
+      {
+        "seed": 20261041,
+        "winner": "rf|w10",
+        "winner_is_sharpe": 0.9905,
+        "winner_oos_sharpe": -0.1051,
+        "winner_oos_sharpe_gross": 0.0749,
+        "winner_is_tstat": 1.7157,
+        "mean_oos_sharpe_all": -0.3989,
+        "mean_oos_sharpe_all_gross": -0.2442,
+        "dsr": 0.5182,
+        "pbo": 0.7217,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261042,
+        "winner": "gbm|w60",
+        "winner_is_sharpe": 0.6512,
+        "winner_oos_sharpe": -0.3683,
+        "winner_oos_sharpe_gross": -0.313,
+        "winner_is_tstat": 1.1278,
+        "mean_oos_sharpe_all": -0.5009,
+        "mean_oos_sharpe_all_gross": -0.3964,
+        "dsr": 0.2321,
+        "pbo": 0.5894,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261043,
+        "winner": "mlp|w10",
+        "winner_is_sharpe": 0.2714,
+        "winner_oos_sharpe": -1.3922,
+        "winner_oos_sharpe_gross": -1.2285,
+        "winner_is_tstat": 0.4701,
+        "mean_oos_sharpe_all": -0.6485,
+        "mean_oos_sharpe_all_gross": -0.4746,
+        "dsr": 0.1226,
+        "pbo": 0.7283,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261044,
+        "winner": "rf|w60",
+        "winner_is_sharpe": 0.5112,
+        "winner_oos_sharpe": -0.7333,
+        "winner_oos_sharpe_gross": -0.5367,
+        "winner_is_tstat": 0.8854,
+        "mean_oos_sharpe_all": -0.6894,
+        "mean_oos_sharpe_all_gross": -0.5409,
+        "dsr": 0.2355,
+        "pbo": 0.7024,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261045,
+        "winner": "rf|w60",
+        "winner_is_sharpe": 1.2935,
+        "winner_oos_sharpe": 0.7616,
+        "winner_oos_sharpe_gross": 0.9268,
+        "winner_is_tstat": 2.2404,
+        "mean_oos_sharpe_all": 0.2878,
+        "mean_oos_sharpe_all_gross": 0.3943,
+        "dsr": 0.8226,
+        "pbo": 0.5628,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261046,
+        "winner": "lasso|w10",
+        "winner_is_sharpe": 0.4187,
+        "winner_oos_sharpe": -0.2186,
+        "winner_oos_sharpe_gross": -0.0459,
+        "winner_is_tstat": 0.7252,
+        "mean_oos_sharpe_all": 0.1795,
+        "mean_oos_sharpe_all_gross": 0.3388,
+        "dsr": 0.2612,
+        "pbo": 0.6734,
+        "verdict": "OVERFIT: not significant after deflation AND high overfitting probability"
+      },
+      {
+        "seed": 20261047,
+        "winner": "mlp|w5",
+        "winner_is_sharpe": 0.1704,
+        "winner_oos_sharpe": -2.0622,
+        "winner_oos_sharpe_gross": -1.9526,
+        "winner_is_tstat": 0.2952,
+        "mean_oos_sharpe_all": -0.3587,
+        "mean_oos_sharpe_all_gross": -0.2409,
+        "dsr": 0.0821,
+        "pbo": 0.1834,
+        "verdict": "suspect: fails one of {deflated significance, low PBO} \u2014 treat as unproven"
+      }
+    ]
+  }
+}

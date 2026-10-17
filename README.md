@@ -76,16 +76,26 @@ about what living through it would feel like. Reshuffling the same 3,750 daily r
 37.6% — the single historical path you observed is one draw from a much wider range.
 Surviving the significance tests is not the same as being survivable.
 
-Code bug (study #1), weak edge (study #2), false execution assumption (study #3), and a
-real edge you may not be able to sit through (study #4) — four different ways a
-good-looking backtest misleads you.
+[`case_studies/ml_model_search/results.md`](case_studies/ml_model_search/results.md) — the
+control experiment: a model search on a **null world** where nothing is predictable by
+construction. 5 model families × 4 lookback windows (20 candidates, walk-forward) on a seeded
+zero-mean price series; the best backtest Sharpe is **+0.84**, the same model out-of-sample is
+**−0.54** (DSR **0.57**, PBO **0.55**, backtest 5.0 years vs 5.1 needed → **OVERFIT**). Repeated
+on 30 fresh seeds, a positive in-sample "winner" appears every time and DSR rejects all of them;
+PBO alone sits near 0.5, a coin flip, as it should on noise. Full search surface, figure and code
+in the folder; the pre-registered design is [`DESIGN.md`](case_studies/ml_model_search/DESIGN.md).
+
+Code bug (study #1), weak edge (study #2), false execution assumption (study #3), a
+real edge you may not be able to sit through (study #4), and a search whose winner is pure
+noise by construction (study #5) — five different ways a good-looking backtest misleads you.
 
 ## Install & run
 
 ```
-pip install -r requirements.txt      # numpy, scipy
+pip install -r requirements.txt      # numpy, scipy (+ scikit-learn, matplotlib for case study 5)
 python demo.py                       # see it in action
-pytest -q                            # 9 property/behaviour tests
+python case_studies/ml_model_search/run_search.py   # case study 5, ~2 minutes
+pytest -q                            # 22 property/behaviour tests
 ```
 
 Use it on your own research by passing a `(T observations × N strategies)` matrix of period
