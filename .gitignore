@@ -3,3 +3,6 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 .claude/
+*.egg-info/
+build/
+dist/

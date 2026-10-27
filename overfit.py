@@ -29,6 +29,8 @@ from itertools import combinations
 import numpy as np
 from scipy.stats import norm, skew as _skew, kurtosis as _kurtosis
 
+__version__ = "1.1.0"
+
 EULER = 0.5772156649015329  # Euler–Mascheroni constant
 
 
@@ -288,3 +290,78 @@ def format_report(rep):
         "  " + "=" * 60,
     ]
     return "\n".join(L)
+
+
+# ------------------------------------------------------------------ command line
+def _read_returns_csv(path):
+    """(names, T × N matrix) from a CSV: a header row of strategy names, then one row per period.
+    A first column that isn't numeric (dates) is ignored."""
+    import csv
+
+    def is_num(x):
+        try:
+            float(x)
+            return True
+        except ValueError:
+            return False
+
+    with open(path, newline="") as fh:
+        rows = [r for r in csv.reader(fh) if any(c.strip() for c in r)]
+    if len(rows) < 2:
+        raise ValueError(f"{path}: need a header row and at least one row of returns")
+    header, body = rows[0], rows[1:]
+    if all(is_num(c) for c in header):
+        raise ValueError(f"{path}: the first row looks like data; add a header row of strategy names")
+    skip = 0 if is_num(body[0][0]) else 1
+    names, data = header[skip:], []
+    for line, r in enumerate(body, 2):
+        vals = r[skip:]
+        if len(vals) != len(names):
+            raise ValueError(f"{path}: line {line} has {len(vals)} values, the header names {len(names)} strategies")
+        try:
+            data.append([float(v) for v in vals])
+        except ValueError:
+            raise ValueError(f"{path}: line {line} has an empty or non-numeric value") from None
+    M = np.array(data)
+    if not np.isfinite(M).all():
+        raise ValueError(f"{path}: returns must be finite numbers")
+    return names, M
+
+
+def main(argv=None):
+    """`backtest-overfitting returns.csv`: the analyze() workup on a CSV of strategy returns."""
+    import argparse
+    import json
+    import sys
+
+    ap = argparse.ArgumentParser(
+        prog="backtest-overfitting",
+        description="Is the best of these strategies real, or the luckiest of many? CSV: one row per period, one "
+                    "column per strategy, a header row of names; a leading date column is ignored.")
+    ap.add_argument("csv", help="period returns, e.g. 0.004 for +0.4%%")
+    ap.add_argument("--periods-per-year", type=float, default=252, help="252 daily (default), 52 weekly, 12 monthly")
+    ap.add_argument("--splits", type=int, default=16, help="CSCV chunks for PBO, an even number (default 16)")
+    ap.add_argument("--json", action="store_true", help="print the analyze() result as JSON")
+    ap.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    a = ap.parse_args(argv)
+    try:
+        names, M = _read_returns_csv(a.csv)
+        if M.shape[1] < 2:
+            raise ValueError("need at least 2 strategy columns: overfitting is about choosing the best of many")
+        if a.splits < 2 or a.splits % 2:
+            raise ValueError("--splits must be an even number, 2 or more")
+        if M.shape[0] < 2 * a.splits:
+            raise ValueError(f"{M.shape[0]} rows is too few for {a.splits} CSCV splits; need at least {2 * a.splits}")
+    except (OSError, ValueError) as e:
+        sys.exit(f"backtest-overfitting: {e}")
+    rep = analyze(M, periods_per_year=a.periods_per_year, n_splits=a.splits)
+    rep["best_strategy_name"] = names[rep["best_strategy"]]
+    if a.json:
+        print(json.dumps(rep, indent=1))
+    else:
+        print(format_report(rep))
+        print(f"  Best strategy column: {rep['best_strategy_name']}")
+
+
+if __name__ == "__main__":
+    main()
