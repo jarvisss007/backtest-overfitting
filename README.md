@@ -91,15 +91,43 @@ noise by construction (study #5) — five different ways a good-looking backtest
 
 ## Install & run
 
-```
-pip install -r requirements.txt      # numpy, scipy (+ scikit-learn, matplotlib for case study 5)
-python demo.py                       # see it in action
-python case_studies/ml_model_search/run_search.py   # case study 5, ~2 minutes
-pytest -q                            # 22 property/behaviour tests
+```bash
+pip install git+https://github.com/jarvisss007/backtest-overfitting     # Python 3.10+, numpy and scipy
 ```
 
-Use it on your own research by passing a `(T observations × N strategies)` matrix of period
-returns to `analyze(...)`.
+The import name is `overfit` (`pip install overfit` is someone else's project; this one is not on PyPI yet). From
+Python, pass a `(T observations × N strategies)` matrix of period returns to `analyze(...)`, as in the example at the
+top. Or skip the code: point the `backtest-overfitting` command at a CSV with one row per period, one column per
+strategy and a header row of names. A leading date column is ignored, so `df.to_csv("returns.csv")` from pandas works
+as it is.
+
+```bash
+backtest-overfitting returns.csv              # --periods-per-year 52 for weekly returns, --json for machine output
+```
+
+On 200 configurations of pure noise, four years of daily returns:
+
+```
+  Best strategy (#135) Sharpe (ann.):   1.34
+  Probabilistic Sharpe (vs 0):                0.996
+  Deflated Sharpe (vs best-of-N benchmark):   0.362   (benchmark 1.52 ann.)
+  Prob. of Backtest Overfitting (PBO):        0.502   (>0.5 is bad)
+  ...
+  VERDICT: OVERFIT: not significant after deflation AND high overfitting probability
+  Best strategy column: config_135
+```
+
+On its own, the winner looks 99.6% significant. Measured against the best of 200 tries, it isn't.
+
+To work on the library itself:
+
+```bash
+git clone https://github.com/jarvisss007/backtest-overfitting && cd backtest-overfitting
+pip install -e ".[test]"                     # adds pytest, scikit-learn and matplotlib (tests, case study 5)
+python demo.py                               # see it in action
+python case_studies/ml_model_search/run_search.py   # case study 5, ~2 minutes
+pytest -q                                    # 29 property/behaviour tests
+```
 
 ## References
 

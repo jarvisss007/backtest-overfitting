@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "backtest-overfitting"
+dynamic = ["version"]
+description = "Detect when a backtest is fooling you: Deflated Sharpe Ratio, Probability of Backtest Overfitting (CSCV), minimum backtest length."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Anupam Patil" }]
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
+keywords = ["backtesting", "deflated-sharpe-ratio", "overfitting", "quantitative-finance", "multiple-testing"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0", "scikit-learn>=1.3", "matplotlib>=3.7"]
+
+[project.scripts]
+backtest-overfitting = "overfit:main"
+
+[project.urls]
+Homepage = "https://github.com/jarvisss007/backtest-overfitting"
+Issues = "https://github.com/jarvisss007/backtest-overfitting/issues"
+
+[tool.setuptools]
+py-modules = ["overfit"]
+
+[tool.setuptools.dynamic]
+version = { attr = "overfit.__version__" }
