@@ -29,7 +29,7 @@ print(format_report(analyze(returns)))
 | `min_backtest_length` | How many years of backtest do N trials require before a given Sharpe means anything? |
 | `pbo_cscv` | **Probability of Backtest Overfitting** via combinatorially symmetric cross-validation. |
 | `analyze` / `format_report` | One-call workup on a `(T × N)` matrix of strategy returns. |
-| `monte_carlo_drawdown` | If this edge is real, how bad could the ride actually get? Shuffles the same trades into thousands of orderings and reports the max-drawdown distribution — see [case study #4](case_studies/turn-of-month-drawdown.md). |
+| `monte_carlo_drawdown` | If this edge is real, how bad could the ride actually get? Shuffles the same trades into thousands of orderings and reports the max-drawdown distribution — see [case study #4](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/turn-of-month-drawdown.md). |
 
 ## Why it works — the demo
 
@@ -49,25 +49,25 @@ flag cherry-picked noise **and** let a genuine edge through.
 
 ## Case studies: my own research
 
-[`case_studies/zero-dte-audit.md`](case_studies/zero-dte-audit.md) — I ran the toolkit against
+[`case_studies/zero-dte-audit.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/zero-dte-audit.md) — I ran the toolkit against
 a 6-config strategy sweep from my own 0DTE research. With no code inspection, "pick the best
 in-sample Sharpe" selected exactly the config containing a lookahead bug, and the tools
 convicted it (DSR 0.34, PBO 0.60, IS→OOS slope −1.44 → **OVERFIT**) — reproducing in seconds
 a verdict that originally took a manual bug-hunt.
 
-[`case_studies/daily-meanrev.md`](case_studies/daily-meanrev.md) — the mirror image: SPY
+[`case_studies/daily-meanrev.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/daily-meanrev.md) — the mirror image: SPY
 daily mean reversion is a **real** anomaly (18 trials, PBO 0.002, every long variant
 profitable after costs) that still fails as a strategy (DSR 0.59; walk-forward Sharpe 0.26
 vs buy-and-hold 0.53). Real-but-weak edges produce exactly this PBO≈0 / DSR<0.95 signature —
 the two metrics measure different things, and you need both. Fully reproducible from public
 data: `python case_studies/daily_meanrev_repro.py`.
 
-[`case_studies/insider-gap.md`](case_studies/insider-gap.md) — the third failure mode:
+[`case_studies/insider-gap.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/insider-gap.md) — the third failure mode:
 an **execution assumption**. SEC Form 4 insider purchases show t≈3 abnormal returns and a
 net Sharpe of +3.1 entering at the filing-day close — but filings mostly arrive after hours,
 and at the honest entry (next day's open) the edge vanishes entirely (all |t|<2, every
 variant net-negative → OVERFIT). The whole effect lives in the untradeable overnight gap.
-[`case_studies/turn-of-month-drawdown.md`](case_studies/turn-of-month-drawdown.md) — the
+[`case_studies/turn-of-month-drawdown.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/turn-of-month-drawdown.md) — the
 case where every gate **passes**: turn-of-month t5 scores DSR **1.0**, PBO **0.01**,
 walk-forward 5/5 — the cleanest statistical profile in my knowledge base. DSR and PBO
 answer "is this edge real, and not an artifact of trying many configs?" They say nothing
@@ -76,14 +76,14 @@ about what living through it would feel like. Reshuffling the same 3,750 daily r
 37.6% — the single historical path you observed is one draw from a much wider range.
 Surviving the significance tests is not the same as being survivable.
 
-[`case_studies/ml_model_search/results.md`](case_studies/ml_model_search/results.md) — the
+[`case_studies/ml_model_search/results.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/ml_model_search/results.md) — the
 control experiment: a model search on a **null world** where nothing is predictable by
 construction. 5 model families × 4 lookback windows (20 candidates, walk-forward) on a seeded
 zero-mean price series; the best backtest Sharpe is **+0.84**, the same model out-of-sample is
 **−0.54** (DSR **0.57**, PBO **0.55**, backtest 5.0 years vs 5.1 needed → **OVERFIT**). Repeated
 on 30 fresh seeds, a positive in-sample "winner" appears every time and DSR rejects all of them;
 PBO alone sits near 0.5, a coin flip, as it should on noise. Full search surface, figure and code
-in the folder; the pre-registered design is [`DESIGN.md`](case_studies/ml_model_search/DESIGN.md).
+in the folder; the pre-registered design is [`DESIGN.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/ml_model_search/DESIGN.md).
 
 Code bug (study #1), weak edge (study #2), false execution assumption (study #3), a
 real edge you may not be able to sit through (study #4), and a search whose winner is pure
@@ -92,10 +92,11 @@ noise by construction (study #5) — five different ways a good-looking backtest
 ## Install & run
 
 ```bash
-pip install git+https://github.com/jarvisss007/backtest-overfitting     # Python 3.10+, numpy and scipy
+pip install backtest-overfitting                                     # Python 3.10+, numpy and scipy
+pip install git+https://github.com/jarvisss007/backtest-overfitting  # or the latest from GitHub
 ```
 
-The import name is `overfit` (`pip install overfit` is someone else's project; this one is not on PyPI yet). From
+The import name is `overfit` (`pip install overfit` is someone else's project). From
 Python, pass a `(T observations × N strategies)` matrix of period returns to `analyze(...)`, as in the example at the
 top. Or skip the code: point the `backtest-overfitting` command at a CSV with one row per period, one column per
 strategy and a header row of names. A leading date column is ignored, so `df.to_csv("returns.csv")` from pandas works
