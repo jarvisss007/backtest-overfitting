@@ -29,7 +29,7 @@ from itertools import combinations
 import numpy as np
 from scipy.stats import norm, skew as _skew, kurtosis as _kurtosis
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 EULER = 0.5772156649015329  # Euler–Mascheroni constant
 
