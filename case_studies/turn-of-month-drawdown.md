@@ -9,13 +9,20 @@ DSR and PBO *don't* tell you about it.
 
 `turn-of-month t5` (last 5 + first 5 trading days of the month, cross-sectional basket,
 15 years of daily bars): DSR **1.0**, PBO **0.01**, walk-forward **5/5** — the cleanest
-statistical profile of anything in the knowledge base. Its own verdict is still
-"real-but-loses-to-buy&hold" (net Sharpe 1.05 vs the basket's own buy&hold Sharpe as
-benchmark, not a raw significance failure) — but DSR/PBO only answer "is this edge
-real and not an artifact of trying many configs?" They say nothing about what living
-through it would actually feel like.
+statistical profile of anything in the knowledge base. **Verdict: beats zero, not the
+market.** Its own verdict is "loses to buy-and-hold": net Sharpe 1.05, below the
+basket's own buy-and-hold Sharpe. This repo does not hold the data or script behind
+that buy-and-hold figure, so no number is given here (see `~/strategy-lab/discover.py`,
+which produced the verdict).
 
-That second question is Heitkoetter's (*A Complete Guide to Day Trading*, Fluency
+Why the gates pass anyway: DSR and PBO check whether the Sharpe beats zero (DSR also
+corrects for the number of configs tried) and whether the winner holds up out of sample.
+Neither compares the strategy to buy-and-hold. A long-only equity basket collects the
+equity premium, so almost any such basket clears a test against zero.
+
+DSR and PBO also say nothing about what living through it would actually feel like.
+
+That ride question is Heitkoetter's (*A Complete Guide to Day Trading*, Fluency
 Project Book 6): shuffle the same trades into thousands of different orderings and
 look at the distribution of max drawdown, because the one historical ordering you
 observed is a single draw from a much wider range of equally-likely paths.
@@ -35,8 +42,9 @@ observed is a single draw from a much wider range of equally-likely paths.
 
 ## The lesson
 
-A DSR of 1.0 and a PBO of 0.01 say the *edge* is credible. They don't say the *ride*
-is comfortable — this strategy's honest range of plausible max drawdown spans
+A DSR of 1.0 and a PBO of 0.01 say this strategy beats zero, not the market: it still
+loses to buy-and-hold, because the gates never ask that question. They also don't say
+the *ride* is comfortable — this strategy's honest range of plausible max drawdown spans
 19%–38% depending on nothing but the order the same trades happened to arrive in.
 The actual historical result (28.2%) sits right at the median: not lucky, not unlucky,
 just what a ~26% typical drawdown looks like when it happens to you specifically.
