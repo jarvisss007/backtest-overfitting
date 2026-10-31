@@ -70,8 +70,9 @@ variant net-negative → OVERFIT). The whole effect lives in the untradeable ove
 [`case_studies/turn-of-month-drawdown.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/turn-of-month-drawdown.md) — the
 case where every gate **passes**: turn-of-month t5 scores DSR **1.0**, PBO **0.01**,
 walk-forward 5/5 — the cleanest statistical profile in my knowledge base. DSR and PBO
-answer "is this edge real, and not an artifact of trying many configs?" They say nothing
-about what living through it would feel like. Reshuffling the same 3,750 daily returns
+answer "is this Sharpe above zero, and not an artifact of trying many configs?" They never
+compare it with buy-and-hold, which this long-only basket still loses to: it beats zero, not
+the market. They also say nothing about what living through it would feel like. Reshuffling the same 3,750 daily returns
 5,000 times puts the *typical* max drawdown at 26.0% and the unlucky-but-ordinary p95 at
 37.6% — the single historical path you observed is one draw from a much wider range.
 Surviving the significance tests is not the same as being survivable.
@@ -86,7 +87,7 @@ PBO alone sits near 0.5, a coin flip, as it should on noise. Full search surface
 in the folder; the pre-registered design is [`DESIGN.md`](https://github.com/jarvisss007/backtest-overfitting/blob/main/case_studies/ml_model_search/DESIGN.md).
 
 Code bug (study #1), weak edge (study #2), false execution assumption (study #3), a
-real edge you may not be able to sit through (study #4), and a search whose winner is pure
+strategy that beats zero but not the market, with drawdowns you may not sit through (study #4), and a search whose winner is pure
 noise by construction (study #5) — five different ways a good-looking backtest misleads you.
 
 ## Install & run
